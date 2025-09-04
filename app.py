@@ -1,3 +1,22 @@
+import streamlit as st
+from pathlib import Path
+import base64
+
+# Custom CSS for Duolingo/Hugging Face style
+st.markdown('''
+    <style>
+    .sidebar-content {background: #232946; color: #eebbc3;}
+    .sidebar-content .stHeader, .sidebar-content .stSubheader {color: #eebbc3;}
+    .sidebar-content .stExpander {background: #232946; border-radius: 8px; margin-bottom: 8px;}
+    .sidebar-content .stButton>button {background: #eebbc3; color: #232946; border-radius: 6px; margin: 2px 0; font-weight: 600;}
+    .sidebar-content .stButton>button:hover {background: #f7f7f7; color: #232946;}
+    .sidebar-content .stProgress>div>div {background: linear-gradient(90deg, #eebbc3 60%, #f7f7f7 100%);}
+    .main-card {background: #f7f7f7; border-radius: 16px; padding: 32px 24px; margin-top: 24px; box-shadow: 0 2px 16px #23294622;}
+    .lesson-title {font-size: 2.2rem; font-weight: 700; color: #232946; margin-bottom: 12px;}
+    .lesson-progress {font-size: 1.1rem; color: #eebbc3; font-weight: 600; margin-bottom: 16px;}
+    .mascot-img {border-radius: 50%; box-shadow: 0 2px 8px #23294644; margin-bottom: 16px;}
+    </style>
+''', unsafe_allow_html=True)
 
 
 import streamlit as st
@@ -88,6 +107,9 @@ if 'selected_course' not in st.session_state:
     st.session_state.selected_course = "Home"
 
 
+if 'selected_course' not in st.session_state:
+    st.session_state.selected_course = "Home"
+
 if page == "Home":
     st.title("🎓 Learn")
     st.markdown("<h2>Learn</h2>", unsafe_allow_html=True)
@@ -101,7 +123,15 @@ if page == "Home":
                     <div class='course-desc'>{course['desc']}</div>
                 </div>
             """, unsafe_allow_html=True)
+            if st.button(f"Go to {course['title']}", key=f"go_{course['key']}"):
+                st.session_state.selected_course = course['title']
+                st.experimental_rerun()
     st.stop()
+
+# Sync sidebar selection with session state
+course_options = ["Home"] + [c["title"] for c in courses]
+if st.session_state.selected_course != page:
+    page = st.session_state.selected_course
 
 # Use session state for navigation
 if st.session_state.selected_course != "Home" and page == "Home":
@@ -123,19 +153,31 @@ else:
     # Sidebar navigation for sections/lessons
     st.sidebar.markdown("---")
     st.sidebar.subheader("Sections")
-    selected_section = st.sidebar.selectbox("Select section:", sections) if sections else None
-    lesson_list = lessons.get(selected_section, []) if selected_section else []
     st.sidebar.subheader("Lessons")
-    selected_lesson = st.sidebar.selectbox("Select lesson:", lesson_list) if lesson_list else None
-    # Progress bar (Duolingo style)
-    completed = lesson_list.index(selected_lesson) + 1 if selected_lesson in lesson_list else 0
+
+    st.sidebar.markdown("<div class='sidebar-content'>", unsafe_allow_html=True)
+    st.sidebar.image("https://raw.githubusercontent.com/huggingface/brand-assets/main/huggingface_logo.png", width=80, caption="Your AI Mascot", output_format="PNG")
+    st.sidebar.markdown("<h2 style='color:#eebbc3;margin-bottom:0;'>Course Navigation</h2>", unsafe_allow_html=True)
+    for section, lessons_in_section in lessons.items():
+        with st.sidebar.expander(f"📚 {section.replace('_', ' ').capitalize()}", expanded=(section == st.session_state.get('selected_section'))):
+            for lesson in lessons_in_section:
+                button_label = f"📝 {lesson.replace('.md', '').replace('_', ' ').capitalize()}"
+                if st.sidebar.button(button_label, key=f"{section}_{lesson}"):
+                    st.session_state.selected_section = section
+                    st.session_state.selected_lesson = lesson
+                    st.experimental_rerun()
+    lesson_list = lessons.get(st.session_state.get('selected_section'), [])
+    completed = lesson_list.index(st.session_state.get('selected_lesson')) + 1 if st.session_state.get('selected_lesson') in lesson_list else 0
     st.sidebar.progress(completed / max(1, len(lesson_list)) if lesson_list else 1, text=f"Progress: {completed}/{len(lesson_list)} lessons")
-    # Mascot/avatar
-    st.sidebar.image("https://raw.githubusercontent.com/huggingface/brand-assets/main/huggingface_logo.png", width=80)
+    st.sidebar.markdown("</div>", unsafe_allow_html=True)
+
     # Main content
-    st.markdown(f"## {get_lesson_title(selected_lesson)}")
-    if selected_section and selected_lesson:
-        st.markdown(load_markdown(course_key, selected_section, selected_lesson))
-        st.markdown(f"<span style='color:{PRIMARY};font-weight:700;'>Lesson {completed} of {len(lesson_list)}</span>", unsafe_allow_html=True)
+    st.markdown("<div class='main-card'>", unsafe_allow_html=True)
+    if lesson_list:
+        st.markdown(f"<div class='lesson-title'>{get_lesson_title(st.session_state.get('selected_lesson'))}</div>", unsafe_allow_html=True)
+        if st.session_state.get('selected_section') and st.session_state.get('selected_lesson'):
+            st.markdown(f"<div class='lesson-progress'>Lesson {completed} of {len(lesson_list)}</div>", unsafe_allow_html=True)
+            st.markdown(load_markdown(course_key, st.session_state.get('selected_section'), st.session_state.get('selected_lesson')))
     else:
         st.info("No lessons available for this course yet.")
+    st.markdown("</div>", unsafe_allow_html=True)
