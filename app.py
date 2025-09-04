@@ -102,9 +102,13 @@ if st.session_state.selected_course != "Home" and page == "Home":
 else:
     # Map course title to key
     course_map = {c['title']: c['key'] for c in courses}
-    course_key = course_map.get(page.lower().replace(' course','').capitalize() + ' Course', None)
+    course_key = course_map.get(page, None)
     if not course_key:
-        course_key = [c['key'] for c in courses if c['title'] == page][0]
+        found = [c['key'] for c in courses if c['title'] == page]
+        course_key = found[0] if found else None
+    if not course_key:
+        st.error("Course not found. Please select a valid course from the sidebar.")
+        st.stop()
     st.title(page)
     # Get sections and lessons
     sections, lessons = get_sections_and_lessons(course_key)
