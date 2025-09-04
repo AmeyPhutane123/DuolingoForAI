@@ -103,6 +103,9 @@ if page == "Home":
                     <div class='course-desc'>{course['desc']}</div>
                 </div>
             """, unsafe_allow_html=True)
+            if st.button(f"Go to {course['title']}", key=f"go_{course['key']}"):
+                st.session_state.selected_course = course['title']
+                st.rerun()
     st.stop()
 
 # Use session state for navigation
