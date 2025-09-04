@@ -51,20 +51,7 @@ st.sidebar.title("Course Navigation")
 if 'selected_course' not in st.session_state:
     st.session_state.selected_course = "Home"
 course_options = ["Home"] + [c["title"] for c in courses]
-<<<<<<< HEAD
-<<<<<<< HEAD
-if "selected_course" not in st.session_state:
-    st.session_state.selected_course = "Home"
-page = st.sidebar.selectbox("Select a course:", course_options, index=course_options.index(st.session_state.selected_course), key="course_select")
-=======
-selected_sidebar_course = st.sidebar.selectbox("Select a course:", course_options, index=course_options.index(st.session_state.selected_course) if st.session_state.selected_course in course_options else 0)
-if selected_sidebar_course != st.session_state.selected_course:
-    st.session_state.selected_course = selected_sidebar_course
-page = st.session_state.selected_course
->>>>>>> parent of deb4839 (Fix navigation and folder mapping for LLM course; sidebar-only navigation)
-=======
 page = st.sidebar.selectbox("Select a course:", course_options)
->>>>>>> e84cfb32b21c1f751f35704c9783a1c48ac8b961
 
 import os
 import glob
@@ -109,19 +96,6 @@ if page == "Home":
     cols = st.columns(2)
     for i, course in enumerate(courses):
         with cols[i % 2]:
-<<<<<<< HEAD
-<<<<<<< HEAD
-            st.markdown("<div class='course-card'>", unsafe_allow_html=True)
-            st.image(course['img'], use_column_width=True)
-            st.markdown(f"<div class='course-title'>{course['title']}</div>", unsafe_allow_html=True)
-            st.markdown(f"<div class='course-desc'>{course['desc']}</div>", unsafe_allow_html=True)
-            if st.button(f"Go to {course['title']}", key=f"go_{course['key']}"):
-                st.session_state.selected_course = course['title']
-                st.experimental_rerun()
-            st.markdown("</div>", unsafe_allow_html=True)
-=======
-=======
->>>>>>> e84cfb32b21c1f751f35704c9783a1c48ac8b961
             st.markdown(f"""
                 <div class='course-card'>
                     <img src='{course['img']}' class='course-img'/>
@@ -129,13 +103,6 @@ if page == "Home":
                     <div class='course-desc'>{course['desc']}</div>
                 </div>
             """, unsafe_allow_html=True)
-<<<<<<< HEAD
-            if st.button(f"Go to {course['title']}", key=f"go_{course['key']}"):
-                st.session_state.selected_course = course['title']
-                st.experimental_rerun()
->>>>>>> parent of deb4839 (Fix navigation and folder mapping for LLM course; sidebar-only navigation)
-=======
->>>>>>> e84cfb32b21c1f751f35704c9783a1c48ac8b961
     st.stop()
 
 # Use session state for navigation
