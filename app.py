@@ -1,9 +1,9 @@
 
 import streamlit as st
 st.set_page_config(page_title="AI Learn Platform", page_icon="🎓", layout="wide")
-
 from pathlib import Path
 import base64
+
 
 # Custom CSS for Duolingo/Hugging Face style
 st.markdown('''
@@ -20,23 +20,6 @@ st.markdown('''
     .mascot-img {border-radius: 50%; box-shadow: 0 2px 8px #23294644; margin-bottom: 16px;}
     </style>
 ''', unsafe_allow_html=True)
-
-
-import streamlit as st
-st.set_page_config(page_title="AI Learn Platform", page_icon="🎓", layout="wide")
-
-# Custom theme and card styles
-PRIMARY = "#22c55e"
-st.markdown(f"""
-    <style>
-    .stApp {{ background: #0b1220; color: #e5f6ee; }}
-    .course-card {{ padding:1.5rem 1.5rem; border-radius:22px; background:#16213a; border:2px solid #22c55e; margin-bottom:1.5rem; box-shadow:0 2px 12px #0002; text-align:left; }}
-    .course-img {{ width:100%; border-radius:18px; margin-bottom:1rem; }}
-    .course-title {{ font-size:1.5rem; font-weight:700; margin-bottom:0.5rem; }}
-    .course-desc {{ font-size:1.1rem; margin-bottom:1rem; color:#e5f6ee; }}
-    .stButton>button {{ background:{PRIMARY}; color:#032b23; border-radius:14px; font-weight:700; }}
-    </style>
-""", unsafe_allow_html=True)
 
 # Course metadata
 courses = [
