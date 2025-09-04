@@ -19,25 +19,25 @@ st.markdown(f"""
 # Course metadata
 courses = [
     {
-        "key": "llm",
+        "key": "1.llm",
         "title": "LLM Course",
         "desc": "This course will teach you about large language models using libraries from the HF ecosystem.",
         "img": "https://huggingface.co/course/static/llm-card.png"
     },
     {
-        "key": "mcp",
+        "key": "2.mcp",
         "title": "MCP Course",
         "desc": "This course will teach you about Model Context Protocol.",
         "img": "https://huggingface.co/course/static/mcp-card.png"
     },
     {
-        "key": "agents",
+        "key": "3.agents",
         "title": "Agents Course",
         "desc": "Learn to build and deploy your own AI agents.",
         "img": "https://huggingface.co/course/static/agents-card.png"
     },
     {
-        "key": "rl",
+        "key": "4.rl",
         "title": "Deep RL Course",
         "desc": "This course will teach you about deep reinforcement learning using libraries from the HF ecosystem.",
         "img": "https://huggingface.co/course/static/rl-card.png"
@@ -48,13 +48,8 @@ courses = [
 
 # Page selection
 st.sidebar.title("Course Navigation")
-if 'selected_course' not in st.session_state:
-    st.session_state.selected_course = "Home"
 course_options = ["Home"] + [c["title"] for c in courses]
-selected_sidebar_course = st.sidebar.selectbox("Select a course:", course_options, index=course_options.index(st.session_state.selected_course) if st.session_state.selected_course in course_options else 0)
-if selected_sidebar_course != st.session_state.selected_course:
-    st.session_state.selected_course = selected_sidebar_course
-page = st.session_state.selected_course
+page = st.sidebar.selectbox("Select a course:", course_options)
 
 import os
 import glob
@@ -106,9 +101,6 @@ if page == "Home":
                     <div class='course-desc'>{course['desc']}</div>
                 </div>
             """, unsafe_allow_html=True)
-            if st.button(f"Go to {course['title']}", key=f"go_{course['key']}"):
-                st.session_state.selected_course = course['title']
-                st.experimental_rerun()
     st.stop()
 
 # Use session state for navigation
