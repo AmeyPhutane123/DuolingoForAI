@@ -184,7 +184,17 @@ if page != "Home":
     # Main content
     if selected_section and selected_lesson:
         st.markdown(f"## {get_lesson_title(selected_lesson)}")
-        st.markdown(load_markdown(course_key, selected_section, selected_lesson))
+        
+        # Debug info
+        file_path = f"courses/{course_key}/{selected_section}/{selected_lesson}"
+        st.write(f"Debug: Looking for file: {file_path}")
+        st.write(f"Debug: File exists: {os.path.exists(file_path)}")
+        
+        content = load_markdown(course_key, selected_section, selected_lesson)
+        if content == "Lesson not found.":
+            st.error(f"Could not load lesson content from: {file_path}")
+        else:
+            st.markdown(content)
         
         # Show lesson progress
         sections, lessons = get_sections_and_lessons(course_key)
