@@ -46,12 +46,56 @@ courses = [
 
 
 
-# Page selection
-st.sidebar.title("Course Navigation")
+# Initialize session state for navigation
 if 'selected_course' not in st.session_state:
     st.session_state.selected_course = "Home"
-course_options = ["Home"] + [c["title"] for c in courses]
-page = st.sidebar.selectbox("Select a course:", course_options)
+if 'selected_section' not in st.session_state:
+    st.session_state.selected_section = None
+if 'selected_lesson' not in st.session_state:
+    st.session_state.selected_lesson = None
+
+# Hierarchical navigation
+st.sidebar.title("Course Navigation")
+
+# Course selection with hierarchy
+if st.sidebar.button("🏠 Home", use_container_width=True):
+    st.session_state.selected_course = "Home"
+    st.session_state.selected_section = None
+    st.session_state.selected_lesson = None
+    st.rerun()
+
+st.sidebar.markdown("---")
+
+for course in courses:
+    # Course header
+    course_selected = st.session_state.selected_course == course['title']
+    if st.sidebar.button(f"📚 {course['title']}", 
+                        key=f"nav_{course['key']}", 
+                        use_container_width=True,
+                        type="primary" if course_selected else "secondary"):
+        st.session_state.selected_course = course['title']
+        st.session_state.selected_section = None
+        st.session_state.selected_lesson = None
+        st.rerun()
+    
+    # Show sections if course is selected
+    if course_selected:
+        sections, lessons = get_sections_and_lessons(course['key'])
+        for section in sections:
+            section_selected = st.session_state.selected_section == section
+            with st.sidebar.expander(f"📖 {get_lesson_title(section)}", expanded=section_selected):
+                for lesson in lessons.get(section, []):
+                    lesson_title = get_lesson_title(lesson)
+                    lesson_selected = st.session_state.selected_lesson == lesson
+                    if st.button(f"{'▶️' if lesson_selected else '📄'} {lesson_title}", 
+                               key=f"lesson_{course['key']}_{section}_{lesson}",
+                               use_container_width=True,
+                               type="primary" if lesson_selected else "secondary"):
+                        st.session_state.selected_section = section
+                        st.session_state.selected_lesson = lesson
+                        st.rerun()
+
+page = st.session_state.selected_course
 
 import os
 import glob
@@ -123,25 +167,33 @@ if page != "Home":
     if not course_key and page != "Home":
         st.error("Course not found. Please select a valid course from the sidebar.")
         st.stop()
+    
     st.title(page)
-    # Get sections and lessons
-    sections, lessons = get_sections_and_lessons(course_key)
-    # Sidebar navigation for sections/lessons
-    st.sidebar.markdown("---")
-    st.sidebar.subheader("Sections")
-    selected_section = st.sidebar.selectbox("Select section:", sections) if sections else None
-    lesson_list = lessons.get(selected_section, []) if selected_section else []
-    st.sidebar.subheader("Lessons")
-    selected_lesson = st.sidebar.selectbox("Select lesson:", lesson_list) if lesson_list else None
-    # Progress bar (Duolingo style)
-    completed = lesson_list.index(selected_lesson) + 1 if selected_lesson in lesson_list else 0
-    st.sidebar.progress(completed / max(1, len(lesson_list)) if lesson_list else 1, text=f"Progress: {completed}/{len(lesson_list)} lessons")
-    # Mascot/avatar
-    st.sidebar.image("https://raw.githubusercontent.com/huggingface/brand-assets/main/huggingface_logo.png", width=80)
-    # Main content
-    st.markdown(f"## {get_lesson_title(selected_lesson)}")
+    
+    # Get current selections from session state
+    selected_section = st.session_state.selected_section
+    selected_lesson = st.session_state.selected_lesson
+    
+    # Add progress and mascot to sidebar
     if selected_section and selected_lesson:
+        sections, lessons = get_sections_and_lessons(course_key)
+        lesson_list = lessons.get(selected_section, [])
+        completed = lesson_list.index(selected_lesson) + 1 if selected_lesson in lesson_list else 0
+        
+        st.sidebar.markdown("---")
+        st.sidebar.progress(completed / max(1, len(lesson_list)) if lesson_list else 1, 
+                          text=f"Progress: {completed}/{len(lesson_list)} lessons")
+        st.sidebar.image("https://raw.githubusercontent.com/huggingface/brand-assets/main/huggingface_logo.png", width=80)
+    
+    # Main content
+    if selected_section and selected_lesson:
+        st.markdown(f"## {get_lesson_title(selected_lesson)}")
         st.markdown(load_markdown(course_key, selected_section, selected_lesson))
+        
+        # Show lesson progress
+        sections, lessons = get_sections_and_lessons(course_key)
+        lesson_list = lessons.get(selected_section, [])
+        completed = lesson_list.index(selected_lesson) + 1 if selected_lesson in lesson_list else 0
         st.markdown(f"<span style='color:{PRIMARY};font-weight:700;'>Lesson {completed} of {len(lesson_list)}</span>", unsafe_allow_html=True)
     else:
-        st.info("No lessons available for this course yet.")
+        st.info("Select a lesson from the sidebar to begin learning!")
