@@ -24,25 +24,25 @@ st.markdown('''
 # Course metadata
 courses = [
     {
-        "key": "1.llm",
+        "key": "llm",
         "title": "LLM Course",
         "desc": "This course will teach you about large language models using libraries from the HF ecosystem.",
         "img": "https://huggingface.co/course/static/llm-card.png"
     },
     {
-        "key": "2.mcp",
+        "key": "mcp",
         "title": "MCP Course",
         "desc": "This course will teach you about Model Context Protocol.",
         "img": "https://huggingface.co/course/static/mcp-card.png"
     },
     {
-        "key": "3.agents",
+        "key": "agents",
         "title": "Agents Course",
         "desc": "Learn to build and deploy your own AI agents.",
         "img": "https://huggingface.co/course/static/agents-card.png"
     },
     {
-        "key": "4.rl",
+        "key": "rl",
         "title": "Deep RL Course",
         "desc": "This course will teach you about deep reinforcement learning using libraries from the HF ecosystem.",
         "img": "https://huggingface.co/course/static/rl-card.png"
@@ -53,10 +53,19 @@ courses = [
 
 # Page selection
 st.sidebar.title("Course Navigation")
+if 'selected_course' not in st.session_state:
+    st.session_state.selected_course = "Home"
 course_options = ["Home"] + [c["title"] for c in courses]
+<<<<<<< HEAD
 if "selected_course" not in st.session_state:
     st.session_state.selected_course = "Home"
 page = st.sidebar.selectbox("Select a course:", course_options, index=course_options.index(st.session_state.selected_course), key="course_select")
+=======
+selected_sidebar_course = st.sidebar.selectbox("Select a course:", course_options, index=course_options.index(st.session_state.selected_course) if st.session_state.selected_course in course_options else 0)
+if selected_sidebar_course != st.session_state.selected_course:
+    st.session_state.selected_course = selected_sidebar_course
+page = st.session_state.selected_course
+>>>>>>> parent of deb4839 (Fix navigation and folder mapping for LLM course; sidebar-only navigation)
 
 import os
 import glob
@@ -104,6 +113,7 @@ if page == "Home":
     cols = st.columns(2)
     for i, course in enumerate(courses):
         with cols[i % 2]:
+<<<<<<< HEAD
             st.markdown("<div class='course-card'>", unsafe_allow_html=True)
             st.image(course['img'], use_column_width=True)
             st.markdown(f"<div class='course-title'>{course['title']}</div>", unsafe_allow_html=True)
@@ -112,6 +122,18 @@ if page == "Home":
                 st.session_state.selected_course = course['title']
                 st.experimental_rerun()
             st.markdown("</div>", unsafe_allow_html=True)
+=======
+            st.markdown(f"""
+                <div class='course-card'>
+                    <img src='{course['img']}' class='course-img'/>
+                    <div class='course-title'>{course['title']}</div>
+                    <div class='course-desc'>{course['desc']}</div>
+                </div>
+            """, unsafe_allow_html=True)
+            if st.button(f"Go to {course['title']}", key=f"go_{course['key']}"):
+                st.session_state.selected_course = course['title']
+                st.experimental_rerun()
+>>>>>>> parent of deb4839 (Fix navigation and folder mapping for LLM course; sidebar-only navigation)
     st.stop()
 
 # Sync sidebar selection with session state
