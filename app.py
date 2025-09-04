@@ -1,6 +1,9 @@
 
 
 import streamlit as st
+import os
+import glob
+
 st.set_page_config(page_title="AI Learn Platform", page_icon="🎓", layout="wide")
 
 # Custom theme and card styles
@@ -44,7 +47,34 @@ courses = [
     }
 ]
 
+# Helper functions
+def get_sections_and_lessons(course_key):
+    base = os.path.join("courses", f"{course_key}")
+    if not os.path.exists(base):
+        return [], {}
+    # Only include folders that contain at least one .md file
+    sections = []
+    lessons = {}
+    for d in sorted(os.listdir(base)):
+        section_path = os.path.join(base, d)
+        if os.path.isdir(section_path):
+            lesson_files = sorted(glob.glob(os.path.join(section_path, '*.md')))
+            if lesson_files:
+                sections.append(d)
+                lessons[d] = [os.path.basename(f) for f in lesson_files]
+    return sections, lessons
 
+def get_lesson_title(filename):
+    if not filename:
+        return "Lesson"
+    return filename.replace('.md','').replace('_',' ').replace('-',' ').capitalize()
+
+def load_markdown(course_key, section, lesson):
+    path = f"courses/{course_key}/{section}/{lesson}"
+    if os.path.exists(path):
+        with open(path, encoding='utf-8') as f:
+            return f.read()
+    return "Lesson not found."
 
 # Initialize session state for navigation
 if 'selected_course' not in st.session_state:
@@ -96,40 +126,6 @@ for course in courses:
                         st.rerun()
 
 page = st.session_state.selected_course
-
-import os
-import glob
-
-def get_sections_and_lessons(course_key):
-    base = os.path.join("courses", f"{course_key}")
-    if not os.path.exists(base):
-        return [], {}
-    # Only include folders that contain at least one .md file
-    sections = []
-    lessons = {}
-    for d in sorted(os.listdir(base)):
-        section_path = os.path.join(base, d)
-        if os.path.isdir(section_path):
-            lesson_files = sorted(glob.glob(os.path.join(section_path, '*.md')))
-            if lesson_files:
-                sections.append(d)
-                lessons[d] = [os.path.basename(f) for f in lesson_files]
-    return sections, lessons
-
-def get_lesson_title(filename):
-    if not filename:
-        return "Lesson"
-    return filename.replace('.md','').replace('_',' ').replace('-',' ').capitalize()
-
-def load_markdown(course_key, section, lesson):
-    path = f"courses/{course_key}/{section}/{lesson}"
-    if os.path.exists(path):
-        with open(path, encoding='utf-8') as f:
-            return f.read()
-    return "Lesson not found."
-
-
-import streamlit as st
 if 'selected_course' not in st.session_state:
     st.session_state.selected_course = "Home"
 
