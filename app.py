@@ -64,6 +64,8 @@ def get_sections_and_lessons(course_key):
     return sections, lessons
 
 def get_lesson_title(filename):
+    if not filename:
+        return "Lesson"
     return filename.replace('.md','').replace('_',' ').replace('-',' ').capitalize()
 
 def load_markdown(course_key, section, lesson):
@@ -115,17 +117,19 @@ else:
     # Sidebar navigation for sections/lessons
     st.sidebar.markdown("---")
     st.sidebar.subheader("Sections")
-    selected_section = st.sidebar.selectbox("Select section:", sections)
-    lesson_list = lessons.get(selected_section, [])
+    selected_section = st.sidebar.selectbox("Select section:", sections) if sections else None
+    lesson_list = lessons.get(selected_section, []) if selected_section else []
     st.sidebar.subheader("Lessons")
-    selected_lesson = st.sidebar.selectbox("Select lesson:", lesson_list)
+    selected_lesson = st.sidebar.selectbox("Select lesson:", lesson_list) if lesson_list else None
     # Progress bar (Duolingo style)
     completed = lesson_list.index(selected_lesson) + 1 if selected_lesson in lesson_list else 0
-    st.sidebar.progress(completed / max(1, len(lesson_list)), text=f"Progress: {completed}/{len(lesson_list)} lessons")
+    st.sidebar.progress(completed / max(1, len(lesson_list)) if lesson_list else 1, text=f"Progress: {completed}/{len(lesson_list)} lessons")
     # Mascot/avatar
     st.sidebar.image("https://raw.githubusercontent.com/huggingface/brand-assets/main/huggingface_logo.png", width=80)
     # Main content
     st.markdown(f"## {get_lesson_title(selected_lesson)}")
-    st.markdown(load_markdown(course_key, selected_section, selected_lesson))
-    # Duolingo-style lesson status
-    st.markdown(f"<span style='color:{PRIMARY};font-weight:700;'>Lesson {completed} of {len(lesson_list)}</span>", unsafe_allow_html=True)
+    if selected_section and selected_lesson:
+        st.markdown(load_markdown(course_key, selected_section, selected_lesson))
+        st.markdown(f"<span style='color:{PRIMARY};font-weight:700;'>Lesson {completed} of {len(lesson_list)}</span>", unsafe_allow_html=True)
+    else:
+        st.info("No lessons available for this course yet.")
