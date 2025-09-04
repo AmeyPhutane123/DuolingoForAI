@@ -73,11 +73,14 @@ def load_markdown(course_key, section, lesson):
             return f.read()
     return "Lesson not found."
 
+
+import streamlit as st
+if 'selected_course' not in st.session_state:
+    st.session_state.selected_course = "Home"
+
 if page == "Home":
     st.title("🎓 Learn")
-    st.markdown("""
-        <h2>Learn</h2>
-    """, unsafe_allow_html=True)
+    st.markdown("<h2>Learn</h2>", unsafe_allow_html=True)
     cols = st.columns(2)
     for i, course in enumerate(courses):
         with cols[i % 2]:
@@ -86,11 +89,15 @@ if page == "Home":
                     <img src='{course['img']}' class='course-img'/>
                     <div class='course-title'>{course['title']}</div>
                     <div class='course-desc'>{course['desc']}</div>
-                    <form action='' method='post'>
-                        <button onclick="window.location.href='/?page={course['title']}'" style='background:{PRIMARY};color:#032b23;border-radius:14px;font-weight:700;padding:0.5rem 1.5rem;border:none;'>Go to Course</button>
-                    </form>
                 </div>
             """, unsafe_allow_html=True)
+            if st.button(f"Go to {course['title']}", key=f"go_{course['key']}"):
+                st.session_state.selected_course = course['title']
+                st.experimental_rerun()
+
+# Use session state for navigation
+if st.session_state.selected_course != "Home" and page == "Home":
+    page = st.session_state.selected_course
 
 else:
     # Map course title to key
