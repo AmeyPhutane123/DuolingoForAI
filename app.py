@@ -54,7 +54,9 @@ courses = [
 # Page selection
 st.sidebar.title("Course Navigation")
 course_options = ["Home"] + [c["title"] for c in courses]
-page = st.sidebar.selectbox("Select a course:", course_options)
+if "selected_course" not in st.session_state:
+    st.session_state.selected_course = "Home"
+page = st.sidebar.selectbox("Select a course:", course_options, index=course_options.index(st.session_state.selected_course), key="course_select")
 
 import os
 import glob
@@ -118,6 +120,7 @@ if page == "Home":
 course_options = ["Home"] + [c["title"] for c in courses]
 if st.session_state.selected_course != page:
     page = st.session_state.selected_course
+    st.experimental_rerun()
 
 # Use session state for navigation
 if st.session_state.selected_course != "Home" and page == "Home":
@@ -136,15 +139,12 @@ else:
     st.title(page)
     # Get sections and lessons
     sections, lessons = get_sections_and_lessons(course_key)
-    # Sidebar navigation for sections/lessons
+    # Sidebar navigation for sections/lessons (hierarchical)
     st.sidebar.markdown("---")
-    st.sidebar.subheader("Sections")
-    st.sidebar.subheader("Lessons")
-
-    st.sidebar.markdown("<div class='sidebar-content'>", unsafe_allow_html=True)
     st.sidebar.image("https://raw.githubusercontent.com/huggingface/brand-assets/main/huggingface_logo.png", width=80, caption="Your AI Mascot", output_format="PNG")
     st.sidebar.markdown("<h2 style='color:#eebbc3;margin-bottom:0;'>Course Navigation</h2>", unsafe_allow_html=True)
-    for section, lessons_in_section in lessons.items():
+    for section in sections:
+        lessons_in_section = lessons.get(section, [])
         with st.sidebar.expander(f"📚 {section.replace('_', ' ').capitalize()}", expanded=(section == st.session_state.get('selected_section'))):
             for lesson in lessons_in_section:
                 button_label = f"📝 {lesson.replace('.md', '').replace('_', ' ').capitalize()}"
@@ -155,7 +155,6 @@ else:
     lesson_list = lessons.get(st.session_state.get('selected_section'), [])
     completed = lesson_list.index(st.session_state.get('selected_lesson')) + 1 if st.session_state.get('selected_lesson') in lesson_list else 0
     st.sidebar.progress(completed / max(1, len(lesson_list)) if lesson_list else 1, text=f"Progress: {completed}/{len(lesson_list)} lessons")
-    st.sidebar.markdown("</div>", unsafe_allow_html=True)
 
     # Main content
     st.markdown("<div class='main-card'>", unsafe_allow_html=True)
