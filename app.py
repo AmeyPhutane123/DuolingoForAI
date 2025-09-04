@@ -45,9 +45,16 @@ courses = [
 ]
 
 
+
 # Page selection
 st.sidebar.title("Course Navigation")
-page = st.sidebar.selectbox("Select a course:", ["Home"] + [c["title"] for c in courses])
+if 'selected_course' not in st.session_state:
+    st.session_state.selected_course = "Home"
+course_options = ["Home"] + [c["title"] for c in courses]
+selected_sidebar_course = st.sidebar.selectbox("Select a course:", course_options, index=course_options.index(st.session_state.selected_course) if st.session_state.selected_course in course_options else 0)
+if selected_sidebar_course != st.session_state.selected_course:
+    st.session_state.selected_course = selected_sidebar_course
+page = st.session_state.selected_course
 
 import os
 import glob
@@ -108,7 +115,7 @@ else:
     if not course_key:
         found = [c['key'] for c in courses if c['title'] == page]
         course_key = found[0] if found else None
-    if not course_key:
+    if not course_key and page != "Home":
         st.error("Course not found. Please select a valid course from the sidebar.")
         st.stop()
     st.title(page)
