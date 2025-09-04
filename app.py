@@ -1,6 +1,7 @@
 
 import streamlit as st
 st.set_page_config(page_title="AI Learn Platform", page_icon="🎓", layout="wide")
+
 from pathlib import Path
 import base64
 
