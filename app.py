@@ -104,16 +104,14 @@ if page == "Home":
     cols = st.columns(2)
     for i, course in enumerate(courses):
         with cols[i % 2]:
-            st.markdown(f"""
-                <div class='course-card'>
-                    <img src='{course['img']}' class='course-img'/>
-                    <div class='course-title'>{course['title']}</div>
-                    <div class='course-desc'>{course['desc']}</div>
-                </div>
-            """, unsafe_allow_html=True)
+            st.markdown("<div class='course-card'>", unsafe_allow_html=True)
+            st.image(course['img'], use_column_width=True)
+            st.markdown(f"<div class='course-title'>{course['title']}</div>", unsafe_allow_html=True)
+            st.markdown(f"<div class='course-desc'>{course['desc']}</div>", unsafe_allow_html=True)
             if st.button(f"Go to {course['title']}", key=f"go_{course['key']}"):
                 st.session_state.selected_course = course['title']
                 st.experimental_rerun()
+            st.markdown("</div>", unsafe_allow_html=True)
     st.stop()
 
 # Sync sidebar selection with session state
