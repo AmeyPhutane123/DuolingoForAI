@@ -8,11 +8,11 @@ PRIMARY = "#22c55e"
 st.markdown(f"""
     <style>
     .stApp {{ background: #0b1220; color: #e5f6ee; }}
-    .course-card {{ padding:1.5rem 1.5rem; border-radius:22px; background:#16213a; border:2px solid #22c55e; margin-bottom:1.5rem; box-shadow:0 2px 12px #0002; text-align:left; }}
+    .course-card {{ padding:1.5rem 1.5rem; border-radius:22px; background:#16213a; border:2px solid #22c55e; margin-bottom:1rem; box-shadow:0 2px 12px #0002; text-align:left; }}
     .course-img {{ width:100%; border-radius:18px; margin-bottom:1rem; }}
     .course-title {{ font-size:1.5rem; font-weight:700; margin-bottom:0.5rem; }}
-    .course-desc {{ font-size:1.1rem; margin-bottom:1rem; color:#e5f6ee; }}
-    .stButton>button {{ background:{PRIMARY}; color:#032b23; border-radius:14px; font-weight:700; }}
+    .course-desc {{ font-size:1.1rem; margin-bottom:1.5rem; color:#e5f6ee; }}
+    .stButton>button {{ background:{PRIMARY}; color:#032b23; border-radius:14px; font-weight:700; margin-top:0.5rem; }}
     </style>
 """, unsafe_allow_html=True)
 
@@ -96,23 +96,24 @@ if page == "Home":
     cols = st.columns(2)
     for i, course in enumerate(courses):
         with cols[i % 2]:
-            st.markdown(f"""
-                <div class='course-card'>
-                    <img src='{course['img']}' class='course-img'/>
-                    <div class='course-title'>{course['title']}</div>
-                    <div class='course-desc'>{course['desc']}</div>
-                </div>
-            """, unsafe_allow_html=True)
-            if st.button(f"Go to {course['title']}", key=f"go_{course['key']}"):
-                st.session_state.selected_course = course['title']
-                st.rerun()
+            with st.container():
+                st.markdown(f"""
+                    <div class='course-card'>
+                        <img src='{course['img']}' class='course-img'/>
+                        <div class='course-title'>{course['title']}</div>
+                        <div class='course-desc'>{course['desc']}</div>
+                    </div>
+                """, unsafe_allow_html=True)
+                if st.button(f"Start {course['title']}", key=f"start_{course['key']}", use_container_width=True):
+                    st.session_state.selected_course = course['title']
+                    st.rerun()
     st.stop()
 
-# Use session state for navigation
-if st.session_state.selected_course != "Home" and page == "Home":
+# Check for course navigation from buttons
+if st.session_state.selected_course != "Home":
     page = st.session_state.selected_course
 
-else:
+if page != "Home":
     # Map course title to key
     course_map = {c['title']: c['key'] for c in courses}
     course_key = course_map.get(page, None)
