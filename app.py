@@ -60,14 +60,19 @@ import os
 import glob
 
 def get_sections_and_lessons(course_key):
-    base = f"courses/{course_key}"
+    base = os.path.join("courses", f"{course_key}")
     if not os.path.exists(base):
         return [], {}
-    sections = [d for d in os.listdir(base) if os.path.isdir(os.path.join(base, d))]
+    # Only include folders that contain at least one .md file
+    sections = []
     lessons = {}
-    for section in sections:
-        lesson_files = sorted(glob.glob(os.path.join(base, section, '*.md')))
-        lessons[section] = [os.path.basename(f) for f in lesson_files]
+    for d in sorted(os.listdir(base)):
+        section_path = os.path.join(base, d)
+        if os.path.isdir(section_path):
+            lesson_files = sorted(glob.glob(os.path.join(section_path, '*.md')))
+            if lesson_files:
+                sections.append(d)
+                lessons[d] = [os.path.basename(f) for f in lesson_files]
     return sections, lessons
 
 def get_lesson_title(filename):
@@ -87,6 +92,7 @@ import streamlit as st
 if 'selected_course' not in st.session_state:
     st.session_state.selected_course = "Home"
 
+
 if page == "Home":
     st.title("🎓 Learn")
     st.markdown("<h2>Learn</h2>", unsafe_allow_html=True)
@@ -103,6 +109,7 @@ if page == "Home":
             if st.button(f"Go to {course['title']}", key=f"go_{course['key']}"):
                 st.session_state.selected_course = course['title']
                 st.experimental_rerun()
+    st.stop()
 
 # Use session state for navigation
 if st.session_state.selected_course != "Home" and page == "Home":
