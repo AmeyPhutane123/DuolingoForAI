@@ -1,0 +1,50 @@
+{
+  "version": "1.0",
+  "metadata": {
+    "course_key": "llm",
+    "section_key": "1.introduction", 
+    "lesson_key": "01.overview",
+    "source_url": "",
+    "last_updated": "2025-09-07T10:00:00Z"
+  },
+  "overview": {
+    "title": "Introduction to AI",
+    "subtitle": "Welcome to the AI Learn course",
+    "difficulty": "beginner",
+    "duration_minutes": 15
+  },
+  "content": {
+    "format": "markdown",
+    "sections": [
+      {
+        "id": "s1", 
+        "title": "What is AI?", 
+        "body": "Artificial Intelligence (AI) is the simulation of human intelligence processes by machines, especially computer systems."
+      }
+    ]
+  },
+  "flashcards": [
+    {
+      "id": "fc1", 
+      "q": "What does AI stand for?", 
+      "a": "Artificial Intelligence", 
+      "xp": 2
+    }
+  ],
+  "quizzes": [
+    {
+      "id": "q1",
+      "q": "Which of the following best describes AI?",
+      "choices": [
+        "Simulation of human intelligence", 
+        "Computer hardware", 
+        "Internet protocol", 
+        "Database system"
+      ],
+      "answer_index": 0,
+      "explain": "AI is the simulation of human intelligence in machines.",
+      "xp_correct": 5,
+      "xp_incorrect": 0
+    }
+  ]
+}
