@@ -1,7 +1,12 @@
 # .streamlit/config.toml
 [theme]
-primaryColor = "#22c55e"
-backgroundColor = "#0b1220"
-secondaryBackgroundColor = "#0f1b2e"
-textColor = "#e5f6ee"
+base="dark"
+primaryColor="#7C3AED"
+textColor="#E6E8F2"
+backgroundColor="#0B1020"
+secondaryBackgroundColor="#12172A"
+# Newer Streamlit versions expose extra theming knobs; fall back gracefully if not present.
+roundness = 0.24          # requires recent versions; otherwise ignored [10][7]
+borderColor = "#1E2540"   # recent versions; otherwise ignored [10]
+showBorderAroundInputs = true  # recent versions; otherwise ignored [10]
 font = "sans serif"
