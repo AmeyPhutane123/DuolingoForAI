@@ -2,11 +2,17 @@
 [theme]
 base="dark"
 primaryColor="#7C3AED"
-textColor="#E6E8F2"
-backgroundColor="#0B1020"
-secondaryBackgroundColor="#12172A"
+textColor="#F1F5F9"
+backgroundColor="#0A0E1A"
+secondaryBackgroundColor="#111827"
 # Newer Streamlit versions expose extra theming knobs; fall back gracefully if not present.
-roundness = 0.24          # requires recent versions; otherwise ignored [10][7]
-borderColor = "#1E2540"   # recent versions; otherwise ignored [10]
-showBorderAroundInputs = true  # recent versions; otherwise ignored [10]
+roundness = 0.5          # requires recent versions; otherwise ignored
+borderColor = "#1E293B"   # recent versions; otherwise ignored
+showBorderAroundInputs = true  # recent versions; otherwise ignored
 font = "sans serif"
+
+[server]
+enableStaticServing = true
+
+[browser]
+gatherUsageStats = false

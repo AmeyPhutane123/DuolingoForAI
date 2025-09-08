@@ -1,26 +1,85 @@
 /* ---------------- Premium baseline ---------------- */
 :root{
-  --bg:#0b1220; --panel:#0f1626; --panel-2:#0c1320;
-  --text:#e8f1fb; --muted:#b4c4db; --border:#1d2940;
-  --brand:#22c55e; --brand-2:#18a14c; --brand-3:#0b7a36;
+  --bg:#0a0e1a; --panel:#111827; --panel-2:#0f172a;
+  --text:#f1f5f9; --muted:#cbd5e1; --border:#1e293b;
+  --brand:#7C3AED; --brand-2:#6d28d9; --brand-3:#5b21b6;
+  --success:#10b981; --warning:#f59e0b; --error:#ef4444;
+  --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --hover-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
-html,body,[class*="css"]{ font-family: Inter, system-ui, Segoe UI, Roboto, Arial; }
+html,body,[class*="css"]{ font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; }
 .stApp{ background:var(--bg); color:var(--text); }
 header[data-testid="stHeader"]{ background:transparent; }
-div.block-container{ max-width: 1160px !important; padding-top:.6rem; }
+div.block-container{ max-width: 1200px !important; padding-top:1rem; }
+
+/* Global element styling */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  margin-bottom: 0.5rem;
+}
+
+p {
+  line-height: 1.7;
+  margin-bottom: 1rem;
+}
+
+/* Improved button styling */
+button, .stButton>button {
+  font-weight: 600;
+  transition: all 0.2s ease;
+  border-radius: 0.5rem !important;
+}
+
+.stButton>button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--hover-shadow);
+}
 
 /* ---------------- Sidebar polish ---------------- */
 section[data-testid="stSidebar"]{
   background:linear-gradient(180deg,var(--panel) 0%, var(--panel-2) 100%);
   border-right:1px solid var(--border);
+  box-shadow: 4px 0 10px rgba(0,0,0,0.1);
 }
+
 section[data-testid="stSidebar"] .stButton>button{
-  width:100%; border-radius:10px; padding:.5rem .7rem; font-weight:800; border:1px solid var(--border);
+  width:100%; 
+  border-radius:0.5rem !important; 
+  padding:.6rem .8rem; 
+  font-weight:600; 
+  border:1px solid var(--border);
+  transition: all 0.2s ease;
 }
-section[data-testid="stSidebar"] button[kind="secondary"]{ background:#0d1729; color:var(--text); }
-section[data-testid="stSidebar"] button[kind="primary"]{ background:var(--brand); color:#041a12; }
-section[data-testid="stSidebar"] .st-expander{ background:transparent; border:1px solid var(--border); border-radius:10px; }
-section[data-testid="stSidebar"] .stProgress>div>div{ background:var(--brand); }
+
+section[data-testid="stSidebar"] button[kind="secondary"]{ 
+  background:#1e293b; 
+  color:var(--text); 
+}
+
+section[data-testid="stSidebar"] button[kind="secondary"]:hover{ 
+  background:#334155; 
+}
+
+section[data-testid="stSidebar"] button[kind="primary"]{ 
+  background:var(--brand); 
+  color:#ffffff; 
+}
+
+section[data-testid="stSidebar"] button[kind="primary"]:hover{ 
+  background:var(--brand-2); 
+}
+
+section[data-testid="stSidebar"] .st-expander{ 
+  background:rgba(255,255,255,0.03); 
+  border:1px solid var(--border); 
+  border-radius:0.5rem; 
+  margin-bottom: 0.75rem;
+}
+
+section[data-testid="stSidebar"] .stProgress>div>div{ 
+  background:var(--brand); 
+}
 
 /* ---------------- Responsive tiles (3/2/1) ---------------- */
 .tiles{
@@ -32,13 +91,24 @@ section[data-testid="stSidebar"] .stProgress>div>div{ background:var(--brand); }
 @media (min-width:1280px){ .tiles{ grid-template-columns: repeat(3, minmax(0,1fr)); } }
 @media (min-width:820px) and (max-width:1279px){ .tiles{ grid-template-columns: repeat(2, minmax(0,1fr)); } }
 
-/* Compact banner card */
+/* Modern course card */
 .tile{
-  position:relative; background:var(--panel); border:1px solid var(--border); border-radius:14px; overflow:hidden;
-  aspect-ratio: 16/7.2; min-height:200px; box-shadow:0 10px 24px rgba(0,0,0,.32);
-  transition: transform .14s ease, border-color .14s ease, box-shadow .14s ease;
+  position:relative; 
+  background:var(--panel); 
+  border:1px solid var(--border); 
+  border-radius:1rem; 
+  overflow:hidden;
+  aspect-ratio: 16/9; 
+  min-height:220px; 
+  box-shadow: var(--card-shadow);
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
-.tile:hover{ transform:translateY(-2px); border-color:#2a3d55; box-shadow:0 14px 30px rgba(0,0,0,.38); }
+
+.tile:hover{ 
+  transform:translateY(-3px); 
+  border-color:var(--brand-3); 
+  box-shadow: var(--hover-shadow);
+}
 
 /* Imagery + legibility overlay */
 .tile-img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; filter:saturate(106%); }
@@ -73,5 +143,372 @@ section[data-testid="stSidebar"] .stProgress>div>div{ background:var(--brand); }
 .info{ border:1px dashed var(--border); background:#0e1728; color:var(--muted); padding:12px 14px; border-radius:10px; }
 .progress-label{ color:var(--brand); font-weight:800; }
 
-/* Compact CTA if used */
-.stButton>button.home-cta{ padding:.42rem .7rem; border-radius:10px; font-weight:800; }
+/* Enhanced CTA buttons */
+.stButton>button.home-cta{ 
+  padding: 0.75rem 1.5rem; 
+  border-radius: 0.5rem !important; 
+  font-weight: 600; 
+  font-size: 1rem;
+  background: var(--brand);
+  color: white;
+  border: none;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+}
+
+.stButton>button.home-cta:hover {
+  background: var(--brand-2);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Course cards */
+.course-card {
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  background: var(--panel);
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--card-shadow);
+}
+
+.course-card:hover {
+  border-color: var(--brand-3);
+  transform: translateY(-3px);
+  box-shadow: var(--hover-shadow);
+}
+
+.course-card h3 {
+  color: var(--text);
+  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.course-card .course-icon {
+  background: var(--brand-3);
+  color: white;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.75rem;
+  font-size: 1.25rem;
+}
+
+.course-card .course-meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 1rem 0;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.course-card .course-progress {
+  margin: 1rem 0;
+}
+
+/* Dashboard stats */
+.stat-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: var(--card-shadow);
+}
+
+.stat-card:hover {
+  border-color: var(--brand-3);
+  transform: translateY(-2px);
+}
+
+.stat-card .stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 0.25rem;
+}
+
+.stat-card .stat-label {
+  font-size: 0.875rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Learning Path Styles */
+.learning-path-container {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.section-title {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.course-overview {
+  background-color: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--card-shadow);
+}
+
+.course-overview h3 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-size: 1.4rem;
+}
+
+.progress-stats {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.unit-container {
+  margin-bottom: 2rem;
+  background-color: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: var(--card-shadow);
+}
+
+.unit-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.unit-number {
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-3) 100%);
+  color: white;
+  border-radius: 50%;
+  margin-right: 1rem;
+  font-weight: bold;
+  font-size: 1.2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.unit-details {
+  flex: 1;
+}
+
+.unit-details h3 {
+  margin: 0;
+  font-size: 1.4rem;
+  color: var(--text);
+}
+
+.unit-progress {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-top: 0.25rem;
+}
+
+.empty-unit {
+  background-color: var(--bg);
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+}
+
+.lessons-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.lesson-card {
+  background-color: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  position: relative;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: var(--card-shadow);
+}
+
+.lesson-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--hover-shadow);
+  border-color: var(--brand-3);
+}
+
+.lesson-icon {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  display: inline-block;
+  background-color: rgba(124, 58, 237, 0.1);
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  margin-bottom: 1rem;
+}
+
+.lesson-card h4 {
+  margin: 0;
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+  color: var(--text);
+}
+
+/* Lesson Content Styles */
+.learn-header {
+  background-color: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--card-shadow);
+}
+
+.lesson-header {
+  background-color: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--card-shadow);
+}
+
+.lesson-header h2 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1.8rem;
+  color: var(--text);
+}
+
+.lesson-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.lesson-badge {
+  background-color: var(--bg);
+  color: var(--muted);
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.difficulty-beginner {
+  background-color: rgba(16, 185, 129, 0.2);
+  color: #10b981;
+}
+
+.difficulty-intermediate {
+  background-color: rgba(245, 158, 11, 0.2);
+  color: #f59e0b;
+}
+
+.difficulty-advanced {
+  background-color: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+
+.content-section-title {
+  font-size: 1.4rem;
+  margin: 2rem 0 1rem 0;
+  color: var(--text);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.content-section {
+  background-color: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--card-shadow);
+}
+
+.content-section h4 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  color: var(--text);
+}
+
+.quiz-container {
+  background-color: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--card-shadow);
+}
+
+.quiz-question {
+  display: flex;
+  margin-bottom: 1.5rem;
+}
+
+.question-number {
+  background-color: var(--brand);
+  color: white;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  margin-right: 1rem;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.question-text {
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+/* Enhance radio buttons for quiz options */
+div[data-testid="stHorizontalBlock"] > div[data-testid="stRadio"] > div:first-child {
+  gap: 0.5rem;
+}
+
+div[data-testid="stRadio"] label {
+  background-color: var(--bg);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  transition: all 0.2s;
+  box-shadow: var(--card-shadow);
+}
+
+div[data-testid="stRadio"] label:hover {
+  background-color: rgba(124, 58, 237, 0.1);
+}
