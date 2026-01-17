@@ -1,4 +1,4 @@
-WIP1
+WIP
 
 <p align="center">
   <img src="https://img.shields.io/badge/Streamlit-🟢-brightgreen" alt="Streamlit Badge" />
